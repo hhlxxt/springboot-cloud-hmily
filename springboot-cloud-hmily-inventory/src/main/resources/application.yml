@@ -1,0 +1,64 @@
+server:
+  port: 8764
+  address: 0.0.0.0
+  servlet:
+    context-path: /inventory-service
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  datasource:
+    url: jdbc:mysql://localhost:3308/hmily_stock?useSSL=false&serverTimezone=UTC
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  application:
+    name: inventory-service
+
+mybatis:
+  type-aliases-package: com.zoro.entity
+  config-location: classpath:mybatis/mybatis-config.xml
+#${random.int[9000,9999]}
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+      registryFetchIntervalSeconds: 1 #从eureka服务器注册表中获取注册信息的时间间隔（s），默认为30秒
+      leaseRenewalIntervalInSeconds: 1 #eureka客户需要多长时间发送心跳给eureka服务器，表明它仍然活着,默认为30 秒
+  instance:
+    prefer-ip-address: true
+
+inventory-service :
+  ribbon.NFLoadBalancerRuleClassName : com.netflix.loadbalancer.RandomRule
+
+logging:
+  level:
+    root: error
+    org.springframework.web: info
+    org.apache.ibatis: info
+    org.dromara.hmily.bonuspoint: debug
+    org.dromara.hmily.lottery: debug
+    org.dromara.hmily: debug
+    com.zoro: debug
+    io.netty: info
+    com:
+      zoro: debug
+
+
+org:
+  dromara:
+    hmily :
+      serializer : kryo
+      recoverDelayTime : 128
+      retryMax : 30
+      scheduledDelay : 128
+      scheduledThreadMax :  10
+      repositorySupport : db
+      started: false
+      hmilyDbConfig :
+        url: jdbc:mysql://localhost:3308/hmily?useSSL=false&serverTimezone=UTC
+        username: root
+        password: root
+        driver-class-name: com.mysql.cj.jdbc.Driver
+
+
