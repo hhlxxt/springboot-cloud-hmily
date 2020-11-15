@@ -151,6 +151,7 @@ public class AccountServiceImpl implements AccountService {
         //空回滚处理  如果没有try记录直接返回
         if(accountMapper.isExistTry(transId) == 0){
             log.info("账户服务try没有执行,空回滚，cancel方法不处理，全局事务Id为{},扣费信息{}",transId,accountDTO);
+            accountMapper.addCancel(transId);
             return Boolean.TRUE;
         }
         //创建幂等判断条件
