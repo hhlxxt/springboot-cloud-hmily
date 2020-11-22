@@ -23,8 +23,8 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:8761/eureka/
-      registryFetchIntervalSeconds: 1 #ä»eurekaæœåŠ¡å™¨æ³¨å†Œè¡¨ä¸­è·å–æ³¨å†Œä¿¡æ¯çš„æ—¶é—´é—´éš”ï¼ˆsï¼‰ï¼Œé»˜è®¤ä¸º30ç§’
-      leaseRenewalIntervalInSeconds: 1 #eurekaå®¢æˆ·éœ€è¦å¤šé•¿æ—¶é—´å‘é€å¿ƒè·³ç»™eurekaæœåŠ¡å™¨ï¼Œè¡¨æ˜å®ƒä»ç„¶æ´»ç€,é»˜è®¤ä¸º30 ç§’
+      registryFetchIntervalSeconds: 1 #´Óeureka·şÎñÆ÷×¢²á±íÖĞ»ñÈ¡×¢²áĞÅÏ¢µÄÊ±¼ä¼ä¸ô£¨s£©£¬Ä¬ÈÏÎª30Ãë
+      leaseRenewalIntervalInSeconds: 1 #eureka¿Í»§ĞèÒª¶à³¤Ê±¼ä·¢ËÍĞÄÌø¸øeureka·şÎñÆ÷£¬±íÃ÷ËüÈÔÈ»»î×Å,Ä¬ÈÏÎª30 Ãë
   instance:
     prefer-ip-address: true
 
@@ -60,3 +60,5 @@ org:
         username: root
         password: root
         driver-class-name: com.mysql.cj.jdbc.Driver
+
+

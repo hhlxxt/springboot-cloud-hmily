@@ -101,7 +101,7 @@ public class OrderServiceImpl implements OrderService {
         //demo中的表里只有商品id为 1的数据
         order.setProductId("1");
         order.setStatus(OrderStatusEnum.NOT_PAY.getCode());
-        order.setTotalAmount(amount);
+        order.setTotalAmount(amount.multiply(new BigDecimal(count)));
         order.setCount(count);
         //demo中 表里面存的用户id为10000
         order.setUserId("10000");

@@ -33,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 
@@ -64,6 +65,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     @Hmily(confirmMethod = "confirmOrderStatus", cancelMethod = "cancelOrderStatus")
+    @Transactional
     public void makePayment(Order order) {
         //获取全局事务id
         String transId = HmilyTransactionContextLocal.getInstance().get().getTransId();
@@ -127,6 +129,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     @Hmily(confirmMethod = "confirmOrderStatus", cancelMethod = "cancelOrderStatus")
+    @Transactional
     public String mockPaymentInventoryWithTryException(Order order) {
         log.debug("===========执行springcloud  mockPaymentInventoryWithTryTimeout 扣减资金接口==========");
 
@@ -174,6 +177,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     @Hmily(confirmMethod = "confirmOrderStatus", cancelMethod = "cancelOrderStatus")
+    @Transactional
     public String mockPaymentInventoryWithTryTimeout(Order order) {
         log.debug("===========执行springcloud  mockPaymentInventoryWithTryTimeout 扣减资金接口==========");
 
@@ -219,6 +223,7 @@ public class PaymentServiceImpl implements PaymentService {
         return "success";
     }
 
+    @Transactional
     public void confirmOrderStatus(Order order) {
         //获取全局事务id 此方法不用做空回滚以及幂等判断 订单状态本来就是幂等的  怎么执行都是成功状态
         String transId = HmilyTransactionContextLocal.getInstance().get().getTransId();
@@ -228,10 +233,25 @@ public class PaymentServiceImpl implements PaymentService {
         log.info("订单微服务 confirm end 开始执行...xid:{},orderNo:{}",transId,order.getId());
     }
 
+    @Transactional
     public void cancelOrderStatus(Order order) {
-        //获取全局事务id  此方法不用做空回滚以及幂等判断 订单状态本来就是幂等的  怎么执行都是失败状态
+
         String transId = HmilyTransactionContextLocal.getInstance().get().getTransId();
         log.info("订单微服务 cancel begin 开始执行...xid:{},orderNo:{}",transId,order.getId());
+        int cancel = orderMapper.addCancel(transId);
+        if (cancel > 0) {
+            log.info("订单微服务 幂等判断 已经处理过不再处理 ...xid:{},orderNo:{}",transId,order.getId());
+            return;
+        }
+
+        int tccTry = orderMapper.addTry(transId);
+        if (tccTry == 0) {
+            log.info("订单微服务 try 未执行，空回滚  ...xid:{},orderNo:{}",transId,order.getId());
+            return;
+        }
+
+
+        orderMapper.addCancel(transId);
         order.setStatus(OrderStatusEnum.PAY_FAIL.getCode());
         orderMapper.update(order);
         log.info("订单微服务 cancel end 开始执行...xid:{},orderNo:{}",transId,order.getId());

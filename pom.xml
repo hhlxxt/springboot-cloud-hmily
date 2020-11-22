@@ -13,6 +13,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>springboot-cloud-hmily</name>
     <description>tcc分布式事务解决方案</description>
+    <packaging>pom</packaging>
 
     <modules>
         <module>springboot-cloud-hmily-order</module>
