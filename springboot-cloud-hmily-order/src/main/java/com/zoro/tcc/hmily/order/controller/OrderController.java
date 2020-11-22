@@ -17,6 +17,7 @@
 
 package com.zoro.tcc.hmily.order.controller;
 
+import com.zoro.tcc.hmily.order.exception.ResultData;
 import com.zoro.tcc.hmily.order.service.OrderService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,24 +45,27 @@ public class OrderController {
 
     @PostMapping(value = "/orderPay")
     @ApiOperation(value = "订单支付接口（注意这里模拟的是创建订单并进行支付扣减库存等操作）")
-    public String orderPay(@RequestParam(value = "count") Integer count,
+    public ResultData orderPay(@RequestParam(value = "count") Integer count,
                            @RequestParam(value = "amount") BigDecimal amount) {
-        return orderService.orderPay(count, amount);
+        orderService.orderPay(count, amount);
+        return ResultData.ok().message("模拟的是创建订单并进行支付扣减库存等操作成功");
 
     }
 
     @PostMapping(value = "/mockInventoryWithTryException")
     @ApiOperation(value = "模拟下单付款操作在try阶段异常，此时账户系统和订单状态会回滚，达到数据的一致性（注意:这里模拟的是系统异常，或者rpc异常）")
-    public String mockInventoryWithTryException(@RequestParam(value = "count") Integer count,
+    public ResultData mockInventoryWithTryException(@RequestParam(value = "count") Integer count,
                                                 @RequestParam(value = "amount") BigDecimal amount) {
-        return orderService.mockInventoryWithTryException(count, amount);
+        orderService.mockInventoryWithTryException(count, amount) ;
+        return  ResultData.ok().message("模拟下单付款操作在try阶段异常，此时账户系统和订单状态会回滚，达到数据的一致性操作成功");
     }
 
     @PostMapping(value = "/mockInventoryWithTryTimeout")
     @ApiOperation(value = "模拟下单付款操作在try阶段超时异常，此时账户系统和订单状态会回滚，达到数据的一致性（异常指的是超时异常）")
-    public String mockInventoryWithTryTimeout(@RequestParam(value = "count") Integer count,
+    public ResultData mockInventoryWithTryTimeout(@RequestParam(value = "count") Integer count,
                                               @RequestParam(value = "amount") BigDecimal amount) {
-        return orderService.mockInventoryWithTryTimeout(count, amount);
+        orderService.mockInventoryWithTryTimeout(count, amount);
+        return ResultData.ok().message("模拟下单付款操作在try阶段超时异常，此时账户系统和订单状态会回滚，达到数据的一致性操作成功");
     }
 
 }
