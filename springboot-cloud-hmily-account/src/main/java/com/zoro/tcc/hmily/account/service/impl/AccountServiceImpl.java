@@ -63,8 +63,6 @@ public class AccountServiceImpl implements AccountService {
     @Transactional
     public boolean payment(final AccountDTO accountDTO) {
 
-        System.err.println("当前线程名称"+Thread.currentThread().getName());
-
         //行锁控制并发
         int i = accountMapper.selectByUserId(accountDTO);
 
